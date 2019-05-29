@@ -1,44 +1,44 @@
-const test = require('ava')
-const attach = require('../../../src/extensions/ignite.js')
+const attach = require('../../../src/extensions/ignite')
 const path = require('path')
+const jetpack = require('fs-jetpack')
 
-test('has the right interface', t => {
-  t.is(typeof attach, 'function')
-  const plugin = null
-  const command = null
-  const context = {
+test('has the right interface', () => {
+  expect(typeof attach).toBe('function')
+
+  const toolbox = {
     print: {},
     parameters: {
-      options: {}
+      options: {},
     },
     system: {
-      which: () => true
+      which: () => true,
     },
     filesystem: {
-      separator: path.sep
-    }
+      separator: path.sep,
+      ...jetpack,
+    },
   }
-  const extension = attach(plugin, command, context)
 
-  t.is(typeof extension.ignitePluginPath, 'function')
-  t.is(typeof extension.setIgnitePluginPath, 'function')
-  t.is(typeof extension.useYarn, 'boolean')
-  t.is(typeof extension.findIgnitePlugins, 'function')
-  t.is(typeof extension.addModule, 'function')
-  t.is(typeof extension.removeModule, 'function')
-  t.is(typeof extension.copyBatch, 'function')
-  t.is(typeof extension.addPluginComponentExample, 'function')
-  t.is(typeof extension.addPluginScreenExamples, 'function')
-  t.is(typeof extension.removePluginComponentExample, 'function')
-  t.is(typeof extension.removePluginScreenExamples, 'function')
-  t.is(typeof extension.loadIgniteConfig, 'function')
-  t.is(typeof extension.saveIgniteConfig, 'function')
-  t.is(typeof extension.setIgniteConfig, 'function')
-  t.is(typeof extension.removeIgniteConfig, 'function')
-  t.is(typeof extension.setDebugConfig, 'function')
-  t.is(typeof extension.removeDebugConfig, 'function')
-  t.is(typeof extension.patchInFile, 'function')
-  t.is(typeof extension.generate, 'function')
-  t.is(typeof extension.log, 'function')
-  t.is(typeof extension.version, 'string')
+  attach(toolbox)
+  const extension = toolbox.ignite
+
+  expect(typeof extension.ignitePluginPath).toBe('function')
+  expect(typeof extension.setIgnitePluginPath).toBe('function')
+  expect(typeof extension.useYarn).toBe('boolean')
+  expect(typeof extension.findIgnitePlugins).toBe('function')
+  expect(typeof extension.addModule).toBe('function')
+  expect(typeof extension.removeModule).toBe('function')
+  expect(typeof extension.copyBatch).toBe('function')
+  expect(typeof extension.addPluginComponentExample).toBe('function')
+  expect(typeof extension.addPluginScreenExamples).toBe('function')
+  expect(typeof extension.removePluginComponentExample).toBe('function')
+  expect(typeof extension.removePluginScreenExamples).toBe('function')
+  expect(typeof extension.loadIgniteConfig).toBe('function')
+  expect(typeof extension.saveIgniteConfig).toBe('function')
+  expect(typeof extension.setIgniteConfig).toBe('function')
+  expect(typeof extension.removeIgniteConfig).toBe('function')
+  expect(typeof extension.setDebugConfig).toBe('function')
+  expect(typeof extension.removeDebugConfig).toBe('function')
+  expect(typeof extension.patchInFile).toBe('function')
+  expect(typeof extension.log).toBe('function')
 })

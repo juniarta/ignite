@@ -1,31 +1,29 @@
-const test = require('ava')
-const execa = require('execa')
-const jetpack = require('fs-jetpack')
+const { system, filesystem } = require('gluegun')
 
-const IGNITE = './bin/ignite'
-const VERSION = jetpack.read('./package.json', 'json').version
+const IGNITE = filesystem.path(`${__dirname}/../../../bin/ignite`)
+const VERSION = filesystem.read('./package.json', 'json').version
 
-test('ignite -v', async t => {
-  const result = await execa(IGNITE, ['-v'])
-  t.is(result.stdout, VERSION)
+test('ignite -v', async () => {
+  const result = await system.spawn(`${IGNITE} -v`)
+  expect(result.stdout.toString()).toContain(VERSION)
 })
 
-test('ignite --v', async t => {
-  const result = await execa(IGNITE, ['--v'])
-  t.is(result.stdout, VERSION)
+test('ignite --v', async () => {
+  const result = await system.spawn(`${IGNITE} --v`)
+  expect(result.stdout.toString()).toContain(VERSION)
 })
 
-test('ignite -version', async t => {
-  const result = await execa(IGNITE, ['-version'])
-  t.is(result.stdout, VERSION)
+test('ignite -version', async () => {
+  const result = await system.spawn(`${IGNITE} -version`)
+  expect(result.stdout.toString()).toContain(VERSION)
 })
 
-test('ignite --version', async t => {
-  const result = await execa(IGNITE, ['--version'])
-  t.is(result.stdout, VERSION)
+test('ignite --version', async () => {
+  const result = await system.spawn(`${IGNITE} --version`)
+  expect(result.stdout.toString()).toContain(VERSION)
 })
 
-test('ignite version', async t => {
-  const result = await execa(IGNITE, ['version'])
-  t.is(result.stdout, VERSION)
+test('ignite version', async () => {
+  const result = await system.spawn(`${IGNITE} version`)
+  expect(result.stdout.toString()).toContain(VERSION)
 })

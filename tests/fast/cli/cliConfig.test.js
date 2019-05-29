@@ -1,4 +1,3 @@
-const test = require('ava')
 const mockery = require('mockery')
 const MockGluegunBuilder = require('./_mockGluegunBuilder')
 const path = require('path')
@@ -14,30 +13,30 @@ mockery.registerMock('../brand/header', () => true)
 mockery.registerMock('gluegun', {
   build: () => mockGluegunBuilder,
   printCommands: context => true,
-  print: { info: noop, debug: noop, colors: { magenta: noop } }
+  print: { info: noop, debug: noop, colors: { magenta: noop } },
 })
 
 // our cli
 const cli = require('../../../src/cli/cli')
 
-test('ignite', async t => {
+test('ignite', async () => {
   mockGluegunBuilder.onCreateRuntime(builderProps => {
     // we expect our CLI to be configured like this
-    t.deepEqual(builderProps, {
+    expect(builderProps).toEqual({
       brand: 'ignite',
       loadAlls: [
         {
           dir: `${process.cwd()}/ignite/plugins`,
-          opts: {}
+          opts: {},
         },
         {
           dir: `${process.cwd()}/node_modules`,
-          opts: { hidden: true, matching: 'ignite-*' }
+          opts: { hidden: true, matching: 'ignite-*' },
         },
         {
           dir: `${process.cwd()}/node_modules`,
-          opts: { hidden: true, matching: 'gluegun-*' }
-        }
+          opts: { hidden: true, matching: 'gluegun-*' },
+        },
       ],
       loadDefault: `${process.cwd()}${path.sep}src${path.sep}cli/..`,
       tokens: {
@@ -45,16 +44,16 @@ test('ignite', async t => {
         commandDescription: 'cliDescription',
         commandHidden: 'cliHidden',
         commandName: 'cliCommand',
-        extensionName: 'contextExtension'
-      }
+        extensionName: 'contextExtension',
+      },
     })
 
     // minimal thing that won't make it crash.
     return {
-      run: () => ({})
+      run: () => ({}),
     }
   })
 
   // run the with nothing
-  await cli([null, null, ''])
+  await cli.run([null, null, ''])
 })

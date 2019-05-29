@@ -1,55 +1,54 @@
-const test = require('ava')
-const extension = require('../../../src/extensions/ignite/findIgnitePlugins')
+const extension = require('../../../src/extensions/ignite/find-ignite-plugins').default
 const path = require('path')
 
-test('has the right interface', t => {
-  t.is(typeof extension, 'function')
-  const context = { filesystem: { separator: path.sep } }
-  const findIgnitePlugin = extension(null, null, context)
-  t.is(typeof findIgnitePlugin, 'function')
+test('has the right interface', () => {
+  expect(typeof extension).toBe('function')
+  const toolbox = { filesystem: { separator: path.sep } }
+  const findIgnitePlugin = extension(toolbox)
+  expect(typeof findIgnitePlugin).toBe('function')
 })
 
-test('plugin-less', t => {
-  const context = {
+test('plugin-less', () => {
+  const toolbox = {
     filesystem: { separator: path.sep },
     runtime: {
-      plugins: []
-    }
+      plugins: [],
+    },
   }
-  const findIgnitePlugin = extension(null, null, context)
-  t.deepEqual(findIgnitePlugin(), [])
+  const findIgnitePlugin = extension(toolbox)
+  expect(findIgnitePlugin()).toEqual([])
 })
 
-test('skips non-ignite plugins', t => {
-  const context = {
+test('skips non-ignite plugins', () => {
+  const toolbox = {
     filesystem: { separator: path.sep },
     runtime: {
-      plugins: [{ name: 'x', directory: 'y' }]
-    }
+      plugins: [{ name: 'x', directory: 'y' }],
+    },
   }
-  const findIgnitePlugin = extension(null, null, context)
-  t.deepEqual(findIgnitePlugin(), [])
+  const findIgnitePlugin = extension(toolbox)
+  expect(findIgnitePlugin()).toEqual([])
 })
 
-test('finds ignite- prefixed plugins', t => {
-  const context = {
+test('finds ignite- prefixed plugins', () => {
+  const toolbox = {
     filesystem: { separator: path.sep },
     runtime: {
-      plugins: [{ name: 'ignite-foo', directory: 'y' }]
-    }
+      plugins: [{ name: 'ignite-foo', directory: 'y' }],
+    },
   }
-  const findIgnitePlugin = extension(null, null, context)
-  t.deepEqual(findIgnitePlugin(), [{ name: 'ignite-foo', directory: 'y' }])
+  const findIgnitePlugin = extension(toolbox)
+  expect(findIgnitePlugin()).toEqual([{ name: 'ignite-foo', directory: 'y' }])
 })
 
-test('finds project plugins', t => {
+test('finds project plugins', () => {
   const dir = `${process.cwd()}${path.sep}ignite${path.sep}plugins${path.sep}y`
-  const context = {
+  const toolbox = {
     filesystem: { separator: path.sep },
     runtime: {
-      plugins: [{ name: 'x', directory: dir }]
-    }
+      plugins: [{ name: 'x', directory: dir }],
+    },
   }
-  const findIgnitePlugin = extension(null, null, context)
-  t.deepEqual(findIgnitePlugin(), [{ name: 'x', directory: dir }])
+  const findIgnitePlugin = extension(toolbox)
+  expect(findIgnitePlugin()).toEqual([{ name: 'x', directory: dir }])
 })
